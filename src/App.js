@@ -1,25 +1,43 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [state, setState] = useState([]);
+
+	useEffect(() => {
+		fetch(`https://api.mangadex.org/manga/`)
+			.then(response => response.json())
+			.then(json => setState(json.results));
+	}, []);
+
+	return (
+		<div className='App'>
+			<h1 className='App-h1'>MangaDex API Fetch</h1>
+			{state ? (
+				<div>
+					{state.map(item => {
+						console.log(item.data, 'is the data');
+						return (
+							<ul key={item.data.id} className='manga-list'>
+								<li className='manga-list-item'>
+									{item.data.attributes.title.en}
+									{item.data.attributes.links.amz ? (
+										<a className='manga-link' href={item.data.attributes.links.amz} target='_blank' rel='noreferrer'>
+											See more
+										</a>
+									) : (
+										<a className='manga-link' href={item.data.attributes.links.raw} target='_blank' rel='noreferrer'>
+											See more
+										</a>
+									)}
+								</li>
+							</ul>
+						);
+					})}
+				</div>
+			) : null}
+		</div>
+	);
 }
 
 export default App;
