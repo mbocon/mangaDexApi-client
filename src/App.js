@@ -5,11 +5,11 @@ function App() {
 	const [state, setState] = useState([]);
 
 	useEffect(() => {
-		fetch(`https://api.mangadex.org/manga/`)
+		fetch(`https://api.mangadex.org/manga/?&limit=100`)
 			.then(response => response.json())
 			.then(json => setState(json.results));
 	}, []);
-
+	
 	return (
 		<div className='App'>
 			<h1 className='App-h1'>MangaDex API Fetch</h1>
